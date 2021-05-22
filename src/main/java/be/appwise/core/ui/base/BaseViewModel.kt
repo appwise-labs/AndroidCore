@@ -5,18 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 
-abstract class BaseViewModel : ViewModel() {
+abstract class BaseViewModel(private val onError: (ex: Throwable) -> Unit = {}) : ViewModel() {
     @Suppress("MemberVisibilityCanBePrivate")
-    var vmScope = viewModelScope
+    var vmScope: CoroutineScope
 
     private val _loading = MutableLiveData<Boolean>().apply { value = false }
     val loading get() = _loading as LiveData<Boolean>
-
     private fun isLoading(loading: Boolean) {
         _loading.postValue(loading)
+    }
+
+    init {
+        vmScope = vmScopeWithCustomExceptionHandler()
     }
 
     private suspend fun showLoading(onSuccess: suspend () -> Unit) {
@@ -29,12 +33,8 @@ abstract class BaseViewModel : ViewModel() {
         showLoading(onSuccess)
     }
 
-    fun setDefaultExceptionHandler(onError: (error: Throwable) -> Unit = {}) {
-        vmScope = vmScopeWithCustomExceptionHandler(onError)
-    }
-
     @Suppress("MemberVisibilityCanBePrivate")
-    fun vmScopeWithCustomExceptionHandler(onError: (error: Throwable) -> Unit = {}) =
+    fun vmScopeWithCustomExceptionHandler() =
         (viewModelScope + CoroutineExceptionHandler { _, throwable ->
             isLoading(false)
             onError(throwable)

@@ -1,6 +1,5 @@
 package be.appwise.core.ui.base
 
-import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 
 abstract class BaseVMActivity : BaseActivity() {
@@ -22,10 +21,4 @@ abstract class BaseVMActivity : BaseActivity() {
 
     protected open fun getViewModelFactory(): ViewModelProvider.NewInstanceFactory =
         ViewModelProvider.NewInstanceFactory()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        mViewModel.setDefaultExceptionHandler(::onError)
-    }
 }

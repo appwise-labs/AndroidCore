@@ -13,8 +13,8 @@ abstract class BaseBindingVMActivity<B : ViewDataBinding> : BaseVMActivity() {
     protected abstract fun getLayout(): Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, getLayout())
         mBinding.lifecycleOwner = this
-        super.onCreate(savedInstanceState)
     }
 }
