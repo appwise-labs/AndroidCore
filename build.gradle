@@ -58,6 +58,13 @@ android {
     dataBinding {
         enabled = true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 // api in front of a dependency means it can be used in the main project as well.

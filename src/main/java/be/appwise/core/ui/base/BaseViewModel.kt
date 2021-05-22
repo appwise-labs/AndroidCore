@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import be.appwise.core.ui.SomeManager
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 
-abstract class BaseViewModel(private val onError: (ex: Throwable) -> Unit = {}) : ViewModel() {
+abstract class BaseViewModel() : ViewModel() {
     @Suppress("MemberVisibilityCanBePrivate")
     var vmScope: CoroutineScope
 
@@ -37,6 +38,6 @@ abstract class BaseViewModel(private val onError: (ex: Throwable) -> Unit = {}) 
     fun vmScopeWithCustomExceptionHandler() =
         (viewModelScope + CoroutineExceptionHandler { _, throwable ->
             isLoading(false)
-            onError(throwable)
+            SomeManager.listener?.onViewModelError(throwable)
         })
 }
